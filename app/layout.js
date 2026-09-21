@@ -25,6 +25,7 @@ export const metadata = {
     "Real Estate Inquiry",
     "Elysian Real Estate",
     "Pearlshire Developers",
+    "Forex Demo",
     "AI Movement",
   ],
   authors: [{ name: "Devmate Solutions", url: "https://devmatesolutions.com" }],
