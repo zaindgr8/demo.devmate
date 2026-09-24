@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { authenticateForm } from "@/lib/forms";
+import { authenticateForm, FORMS } from "@/lib/forms";
 
 export default function LockScreen({ fixedForm, onUnlock }) {
   const [username, setUsername] = useState(fixedForm ? fixedForm.username : "");
@@ -93,6 +93,63 @@ export default function LockScreen({ fixedForm, onUnlock }) {
           <div className="space-y-6">
             {!fixedForm && (
               <div>
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-gray-600">
+                    Available Forms ({Object.keys(FORMS).length})
+                  </span>
+                  <span className="text-[11px] text-gray-400">Click to select</span>
+                </div>
+                <div className="space-y-2">
+                  {Object.values(FORMS).map((f) => {
+                    const isSelected =
+                      (username || "").toLowerCase() === f.username.toLowerCase();
+                    return (
+                      <button
+                        key={f.id}
+                        type="button"
+                        onClick={() => {
+                          setUsername(f.username);
+                          setError(false);
+                        }}
+                        className={`w-full flex items-center justify-between p-3.5 rounded-lg border text-left transition-all cursor-pointer ${
+                          isSelected
+                            ? "border-black bg-black text-white shadow-sm"
+                            : "border-gray-200 bg-gray-50/70 hover:bg-gray-100 hover:border-gray-400 text-gray-900"
+                        }`}
+                      >
+                        <div className="min-w-0 pr-3">
+                          <div className="text-xs font-semibold tracking-wide">
+                            {f.title}
+                          </div>
+                          <div
+                            className={`text-[11px] mt-0.5 ${
+                              isSelected ? "text-gray-300" : "text-gray-500"
+                            }`}
+                          >
+                            Username:{" "}
+                            <span className="font-mono font-medium">{f.username}</span>
+                          </div>
+                        </div>
+                        <div className="shrink-0 flex items-center gap-2">
+                          <span
+                            className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${
+                              isSelected
+                                ? "bg-white text-black"
+                                : "bg-gray-200 text-gray-700"
+                            }`}
+                          >
+                            {isSelected ? "Active" : "Select"}
+                          </span>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {!fixedForm && (
+              <div>
                 <label
                   htmlFor="portal-username"
                   className="block text-sm font-medium text-black mb-2"
@@ -146,6 +203,24 @@ export default function LockScreen({ fixedForm, onUnlock }) {
           >
             Unlock Form
           </button>
+
+          {/* Direct Links */}
+          <div className="pt-2 text-center border-t border-gray-100">
+            <p className="text-[11px] text-gray-400 uppercase tracking-widest mb-2 font-medium">
+              Direct Form URLs
+            </p>
+            <div className="flex flex-wrap justify-center items-center gap-x-4 gap-y-1">
+              {Object.values(FORMS).map((f) => (
+                <a
+                  key={f.id}
+                  href={`/${f.id}`}
+                  className="text-xs text-gray-600 hover:text-black font-mono underline underline-offset-4 decoration-gray-300 hover:decoration-black transition-colors"
+                >
+                  /{f.id}
+                </a>
+              ))}
+            </div>
+          </div>
         </form>
       </div>
 
