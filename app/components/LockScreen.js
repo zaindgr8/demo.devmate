@@ -37,14 +37,18 @@ export default function LockScreen({ fixedForm, onUnlock }) {
 
   return (
     <div
+      className="devmate-pattern relative"
       style={{
         minHeight: "100vh",
-        background: "white",
+        background: "#ffffff",
         display: "flex",
         flexDirection: "column",
         padding: "16px",
       }}
     >
+      {/* Devmate Top Accent Bar */}
+      <div className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#c0392b] via-[#e74c3c] to-[#c0392b] z-50"></div>
+
       <div
         style={{
           width: "100%",
@@ -64,7 +68,7 @@ export default function LockScreen({ fixedForm, onUnlock }) {
         >
           {/* Lock Icon & Header */}
           <div className="text-center">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gray-50 border border-gray-200 mb-4 text-black">
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-red-50 border border-red-100 mb-4 text-[#c0392b] shadow-sm">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5"
@@ -86,7 +90,7 @@ export default function LockScreen({ fixedForm, onUnlock }) {
             <p className="text-xs text-gray-500 uppercase tracking-widest mb-3">
               {fixedForm ? "Restricted Access Form" : "Enter credentials to unlock"}
             </p>
-            <div className="w-12 h-px bg-black mx-auto"></div>
+            <div className="w-12 h-0.5 bg-gradient-to-r from-[#c0392b] to-[#e74c3c] mx-auto rounded-full"></div>
           </div>
 
           {/* Form Fields */}
@@ -113,17 +117,17 @@ export default function LockScreen({ fixedForm, onUnlock }) {
                         }}
                         className={`w-full flex items-center justify-between p-3.5 rounded-lg border text-left transition-all cursor-pointer ${
                           isSelected
-                            ? "border-black bg-black text-white shadow-sm"
-                            : "border-gray-200 bg-gray-50/70 hover:bg-gray-100 hover:border-gray-400 text-gray-900"
+                            ? "border-[#c0392b] bg-red-50/70 text-gray-900 shadow-sm ring-1 ring-[#c0392b]/30"
+                            : "border-gray-200 bg-gray-50/70 hover:bg-red-50/30 hover:border-red-200 text-gray-900"
                         }`}
                       >
                         <div className="min-w-0 pr-3">
-                          <div className="text-xs font-semibold tracking-wide">
+                          <div className="text-xs font-semibold tracking-wide text-gray-900">
                             {f.title}
                           </div>
                           <div
                             className={`text-[11px] mt-0.5 ${
-                              isSelected ? "text-gray-300" : "text-gray-500"
+                              isSelected ? "text-[#c0392b]" : "text-gray-500"
                             }`}
                           >
                             Username:{" "}
@@ -134,7 +138,7 @@ export default function LockScreen({ fixedForm, onUnlock }) {
                           <span
                             className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${
                               isSelected
-                                ? "bg-white text-black"
+                                ? "bg-[#c0392b] text-white shadow-xs"
                                 : "bg-gray-200 text-gray-700"
                             }`}
                           >
@@ -164,7 +168,7 @@ export default function LockScreen({ fixedForm, onUnlock }) {
                   required
                   placeholder="Enter assigned username"
                   autoComplete="username"
-                  className="w-full px-0 py-3 border-0 border-b border-gray-300 bg-transparent text-black placeholder-gray-400 focus:outline-none focus:border-black transition-colors"
+                  className="w-full px-0 py-3 border-0 border-b border-gray-300 bg-transparent text-black placeholder-gray-400 focus:outline-none focus:border-[#c0392b] transition-colors"
                 />
               </div>
             )}
@@ -184,22 +188,22 @@ export default function LockScreen({ fixedForm, onUnlock }) {
                 required
                 placeholder="Enter password"
                 autoComplete="current-password"
-                className="w-full px-0 py-3 border-0 border-b border-gray-300 bg-transparent text-black placeholder-gray-400 focus:outline-none focus:border-black transition-colors"
+                className="w-full px-0 py-3 border-0 border-b border-gray-300 bg-transparent text-black placeholder-gray-400 focus:outline-none focus:border-[#c0392b] transition-colors"
               />
             </div>
           </div>
 
           {/* Error Message */}
           {error && (
-            <div className="text-center p-3 bg-red-50 border border-red-200">
-              <p className="text-xs text-red-600 font-medium">{error}</p>
+            <div className="text-center p-3 bg-red-50 border border-red-200 rounded-md">
+              <p className="text-xs text-[#c0392b] font-medium">{error}</p>
             </div>
           )}
 
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full py-4 bg-black text-white font-medium hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 transition-colors cursor-pointer"
+            className="w-full py-4 bg-gradient-to-r from-[#c0392b] to-[#e74c3c] text-white font-medium hover:from-[#961918] hover:to-[#c0392b] focus:outline-none focus:ring-2 focus:ring-[#c0392b] focus:ring-offset-2 transition-all shadow-[0_4px_16px_rgba(192,57,43,0.3)] hover:shadow-[0_6px_20px_rgba(192,57,43,0.4)] cursor-pointer rounded-lg"
           >
             Unlock Form
           </button>
@@ -214,7 +218,7 @@ export default function LockScreen({ fixedForm, onUnlock }) {
                 <a
                   key={f.id}
                   href={`/${f.id}`}
-                  className="text-xs text-gray-600 hover:text-black font-mono underline underline-offset-4 decoration-gray-300 hover:decoration-black transition-colors"
+                  className="text-xs text-gray-600 hover:text-[#c0392b] font-mono underline underline-offset-4 decoration-gray-300 hover:decoration-[#c0392b] transition-colors"
                 >
                   /{f.id}
                 </a>
@@ -240,7 +244,8 @@ export default function LockScreen({ fixedForm, onUnlock }) {
             href="https://devmatesolutions.com"
             target="_blank"
             rel="noopener noreferrer"
-            style={{ color: "#374151", textDecoration: "underline" }}
+            style={{ color: "#374151" }}
+            className="underline hover:text-[#c0392b] transition-colors"
           >
             devmatesolutions.com
           </a>
@@ -251,7 +256,8 @@ export default function LockScreen({ fixedForm, onUnlock }) {
             href="https://aifounderhub.com"
             target="_blank"
             rel="noopener noreferrer"
-            style={{ color: "#374151", textDecoration: "underline" }}
+            style={{ color: "#374151" }}
+            className="underline hover:text-[#c0392b] transition-colors"
           >
             aifounderhub.com
           </a>

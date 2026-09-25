@@ -47,23 +47,24 @@ function MainPortal() {
   // Prevent hydration mismatch
   if (!mounted) {
     return (
-      <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4">
+      <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4 relative">
+        <div className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#c0392b] via-[#e74c3c] to-[#c0392b] z-50"></div>
         <div className="w-full max-w-md animate-pulse space-y-8">
           <div className="text-center">
-            <div className="h-6 bg-gray-200 w-32 mx-auto mb-2"></div>
-            <div className="h-px bg-gray-200 w-12 mx-auto"></div>
+            <div className="h-6 bg-red-100/50 w-32 mx-auto mb-2 rounded"></div>
+            <div className="h-0.5 bg-gradient-to-r from-[#c0392b] to-[#e74c3c] w-12 mx-auto rounded-full"></div>
           </div>
           <div className="space-y-6">
             <div>
-              <div className="h-4 bg-gray-200 w-16 mb-2"></div>
-              <div className="h-12 bg-gray-200 w-full"></div>
+              <div className="h-4 bg-gray-100 w-16 mb-2 rounded"></div>
+              <div className="h-12 bg-gray-100 w-full rounded"></div>
             </div>
             <div>
-              <div className="h-4 bg-gray-200 w-24 mb-2"></div>
-              <div className="h-12 bg-gray-200 w-full"></div>
+              <div className="h-4 bg-gray-100 w-24 mb-2 rounded"></div>
+              <div className="h-12 bg-gray-100 w-full rounded"></div>
             </div>
           </div>
-          <div className="h-12 bg-gray-200 w-full"></div>
+          <div className="h-12 bg-red-100/40 w-full rounded-lg"></div>
         </div>
       </div>
     );
@@ -82,11 +83,12 @@ export default function Home() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4">
+        <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4 relative">
+          <div className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#c0392b] via-[#e74c3c] to-[#c0392b] z-50"></div>
           <div className="w-full max-w-md animate-pulse space-y-8">
             <div className="text-center">
-              <div className="h-6 bg-gray-200 w-32 mx-auto mb-2"></div>
-              <div className="h-px bg-gray-200 w-12 mx-auto"></div>
+              <div className="h-6 bg-red-100/50 w-32 mx-auto mb-2 rounded"></div>
+              <div className="h-0.5 bg-gradient-to-r from-[#c0392b] to-[#e74c3c] w-12 mx-auto rounded-full"></div>
             </div>
           </div>
         </div>

@@ -56,22 +56,26 @@ export default function MortgageForm({ form, onLock }) {
 
   return (
     <div
+      className="devmate-pattern relative"
       style={{
         minHeight: "100vh",
-        background: "white",
+        background: "#ffffff",
         display: "flex",
         flexDirection: "column",
         padding: "16px",
         position: "relative",
       }}
     >
+      {/* Devmate Top Accent Bar */}
+      <div className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#c0392b] via-[#e74c3c] to-[#c0392b] z-50"></div>
+
       {/* Top action bar */}
       {onLock && (
         <div style={{ maxWidth: "448px", width: "100%", margin: "0 auto 8px auto", display: "flex", justifyContent: "flex-end" }}>
           <button
             onClick={onLock}
             type="button"
-            className="text-xs text-gray-400 hover:text-black transition-colors flex items-center gap-1 py-1 px-2 rounded hover:bg-gray-100"
+            className="text-xs text-gray-500 hover:text-[#c0392b] transition-colors flex items-center gap-1.5 py-1 px-2.5 rounded hover:bg-red-50/50"
             title="Lock this form"
           >
             <svg
@@ -108,7 +112,7 @@ export default function MortgageForm({ form, onLock }) {
             <h1 className="text-2xl font-light text-black mb-2 tracking-wide">
               {form.title}
             </h1>
-            <div className="w-12 h-px bg-black mx-auto"></div>
+            <div className="w-12 h-0.5 bg-gradient-to-r from-[#c0392b] to-[#e74c3c] mx-auto rounded-full"></div>
           </div>
 
           {/* Form Fields */}
@@ -126,7 +130,7 @@ export default function MortgageForm({ form, onLock }) {
                 name="name"
                 required
                 placeholder="Enter your name"
-                className="w-full px-0 py-3 border-0 border-b border-gray-300 bg-transparent text-black placeholder-gray-400 focus:outline-none focus:border-black transition-colors"
+                className="w-full px-0 py-3 border-0 border-b border-gray-300 bg-transparent text-black placeholder-gray-400 focus:outline-none focus:border-[#c0392b] transition-colors"
               />
             </div>
 
@@ -141,7 +145,7 @@ export default function MortgageForm({ form, onLock }) {
                 <select
                   id="country"
                   name="country"
-                  className="px-0 py-3 border-0 border-b border-gray-300 bg-transparent text-black focus:outline-none focus:border-black transition-colors"
+                  className="px-0 py-3 border-0 border-b border-gray-300 bg-transparent text-black focus:outline-none focus:border-[#c0392b] transition-colors"
                   defaultValue="971"
                 >
                   {/* GCC Countries */}
@@ -205,7 +209,7 @@ export default function MortgageForm({ form, onLock }) {
                   name="contact"
                   required
                   placeholder="Phone number"
-                  className="flex-1 px-0 py-3 border-0 border-b border-gray-300 bg-transparent text-black placeholder-gray-400 focus:outline-none focus:border-black transition-colors"
+                  className="flex-1 px-0 py-3 border-0 border-b border-gray-300 bg-transparent text-black placeholder-gray-400 focus:outline-none focus:border-[#c0392b] transition-colors"
                 />
               </div>
             </div>
@@ -214,7 +218,7 @@ export default function MortgageForm({ form, onLock }) {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full py-4 bg-black text-white font-medium hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            className="w-full py-4 bg-gradient-to-r from-[#c0392b] to-[#e74c3c] text-white font-medium hover:from-[#961918] hover:to-[#c0392b] focus:outline-none focus:ring-2 focus:ring-[#c0392b] focus:ring-offset-2 transition-all shadow-[0_4px_16px_rgba(192,57,43,0.3)] hover:shadow-[0_6px_20px_rgba(192,57,43,0.4)] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer rounded-lg"
             disabled={loading}
           >
             {loading ? (
@@ -248,15 +252,15 @@ export default function MortgageForm({ form, onLock }) {
 
           {/* Success/Error Messages */}
           {success && (
-            <div className="text-center p-3 bg-gray-50 border border-gray-200">
-              <p className="text-sm font-medium text-black">
+            <div className="text-center p-3 bg-emerald-50 border border-emerald-200 rounded-md">
+              <p className="text-sm font-medium text-emerald-700">
                 ✓ Thank you! We'll contact you soon.
               </p>
             </div>
           )}
           {error && (
-            <div className="text-center p-3 bg-red-50 border border-red-200">
-              <p className="text-sm text-red-600">
+            <div className="text-center p-3 bg-red-50 border border-red-200 rounded-md">
+              <p className="text-sm text-[#c0392b]">
                 ✗ Something went wrong. Please try again.
               </p>
             </div>
@@ -280,7 +284,8 @@ export default function MortgageForm({ form, onLock }) {
             href="https://devmatesolutions.com"
             target="_blank"
             rel="noopener noreferrer"
-            style={{ color: "#374151", textDecoration: "underline" }}
+            style={{ color: "#374151" }}
+            className="underline hover:text-[#c0392b] transition-colors"
           >
             devmatesolutions.com
           </a>
@@ -291,7 +296,8 @@ export default function MortgageForm({ form, onLock }) {
             href="https://aifounderhub.com"
             target="_blank"
             rel="noopener noreferrer"
-            style={{ color: "#374151", textDecoration: "underline" }}
+            style={{ color: "#374151" }}
+            className="underline hover:text-[#c0392b] transition-colors"
           >
             aifounderhub.com
           </a>
