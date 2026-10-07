@@ -28,9 +28,91 @@ export default function MortgageForm({ form, onLock }) {
     script.setAttribute("data-agent-version", widgetConfig.agentVersion || "0");
     script.setAttribute("data-title", widgetConfig.title || "Chat with Vizz Heights");
     script.setAttribute("data-fab-text", widgetConfig.fabText || "Need help finding a home?");
+    script.setAttribute("data-logo-url", widgetConfig.logoUrl || "/devmate-logo.png");
+    script.setAttribute("data-bot-name", widgetConfig.botName || "Devmate AI Assistant");
+    script.setAttribute("data-color", widgetConfig.themeColor || "#c0392b");
+    script.setAttribute("data-theme-color", widgetConfig.themeColor || "#c0392b");
     document.body.appendChild(script);
 
+    // Active Devmate Branding replacer for shadow DOM & widget elements
+    function replaceBranding(container) {
+      if (!container) return;
+
+      // 1. Replace Retell links with Devmate Solutions
+      const retellLinks = container.querySelectorAll(
+        "a[href*='retellai.com'], a[href*='retell']"
+      );
+      retellLinks.forEach((a) => {
+        a.href = widgetConfig.brandingUrl || "https://devmatesolutions.com";
+        a.textContent = widgetConfig.brandingName || "devmatesolutions.com";
+        a.setAttribute("target", "_blank");
+        a.setAttribute("rel", "noopener noreferrer");
+        a.style.color = "#c0392b";
+        a.style.textDecoration = "underline";
+      });
+
+      // 2. Replace any text occurrences of "Retell" in powered-by nodes
+      const allTextNodes = container.querySelectorAll(
+        "[class*='poweredBy'], [class*='PoweredBy'], span, div, p"
+      );
+      allTextNodes.forEach((node) => {
+        if (
+          node.childNodes.length === 1 &&
+          node.childNodes[0].nodeType === Node.TEXT_NODE
+        ) {
+          if (node.textContent.includes("Powered by Retell")) {
+            node.innerHTML = `Powered by <a href="${widgetConfig.brandingUrl || "https://devmatesolutions.com"}" target="_blank" rel="noopener noreferrer" style="color: #c0392b; text-decoration: underline; font-weight: 500;">${widgetConfig.brandingName || "devmatesolutions.com"}</a>`;
+          }
+        }
+      });
+
+      // 3. Inject styling for brand consistency into container
+      if (!container.querySelector("#devmate-widget-styles")) {
+        const style = document.createElement("style");
+        style.id = "devmate-widget-styles";
+        style.textContent = `
+          a[href*="devmatesolutions"] {
+            color: #c0392b !important;
+            text-decoration: underline !important;
+            font-weight: 500 !important;
+          }
+          [class*="poweredBy"] a {
+            color: #c0392b !important;
+          }
+        `;
+        container.appendChild(style);
+      }
+    }
+
+    let intervalId = null;
+    let shadowObserver = null;
+
+    function monitorRoot() {
+      const root = document.getElementById("retell-widget-root");
+      if (!root) return;
+
+      if (root.shadowRoot) {
+        replaceBranding(root.shadowRoot);
+
+        if (!shadowObserver) {
+          shadowObserver = new MutationObserver(() => {
+            replaceBranding(root.shadowRoot);
+          });
+          shadowObserver.observe(root.shadowRoot, {
+            childList: true,
+            subtree: true,
+            characterData: true,
+          });
+        }
+      }
+    }
+
+    intervalId = setInterval(monitorRoot, 200);
+
     return () => {
+      if (intervalId) clearInterval(intervalId);
+      if (shadowObserver) shadowObserver.disconnect();
+
       const activeScript = document.getElementById(scriptId);
       if (activeScript && activeScript.parentNode) {
         activeScript.parentNode.removeChild(activeScript);
@@ -357,6 +439,19 @@ export default function MortgageForm({ form, onLock }) {
                 </svg>
                 {form.chatWidget.title || "Chat with Vizz Heights"}
               </button>
+              <div className="mt-1.5 text-center">
+                <span className="text-[11px] text-gray-400">
+                  Powered by{" "}
+                  <a
+                    href="https://devmatesolutions.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-600 hover:text-[#c0392b] underline transition-colors font-medium"
+                  >
+                    devmatesolutions.com
+                  </a>
+                </span>
+              </div>
             </div>
           )}
         </form>
