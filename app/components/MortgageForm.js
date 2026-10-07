@@ -1,11 +1,71 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 export default function MortgageForm({ form, onLock }) {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
+
+  useEffect(() => {
+    if (!form?.chatWidget) return;
+
+    const widgetConfig = form.chatWidget;
+    const scriptId = "retell-widget";
+
+    // Clean up any stale elements before inserting
+    const existingScript = document.getElementById(scriptId);
+    if (existingScript) existingScript.remove();
+    const existingRoot = document.getElementById("retell-widget-root");
+    if (existingRoot) existingRoot.remove();
+
+    const script = document.createElement("script");
+    script.id = scriptId;
+    script.src = "https://dashboard.retellai.com/retell-widget-v2.js";
+    script.type = "module";
+    script.setAttribute("data-public-key", widgetConfig.publicKey);
+    script.setAttribute("data-agent-id", widgetConfig.agentId);
+    script.setAttribute("data-agent-version", widgetConfig.agentVersion || "0");
+    script.setAttribute("data-title", widgetConfig.title || "Chat with Vizz Heights");
+    script.setAttribute("data-fab-text", widgetConfig.fabText || "Need help finding a home?");
+    document.body.appendChild(script);
+
+    return () => {
+      const activeScript = document.getElementById(scriptId);
+      if (activeScript && activeScript.parentNode) {
+        activeScript.parentNode.removeChild(activeScript);
+      }
+      const activeRoot = document.getElementById("retell-widget-root");
+      if (activeRoot && activeRoot.parentNode) {
+        activeRoot.parentNode.removeChild(activeRoot);
+      }
+      document.querySelectorAll("[id*='retell'], [class*='retell']").forEach((el) => {
+        if (el.tagName !== "SCRIPT") el.remove();
+      });
+      if (typeof window !== "undefined" && window.__retellWidgetGlobal) {
+        try {
+          delete window.__retellWidgetGlobal.__RETELL_CHAT_WIDGET_BUNDLE_LOADED__;
+        } catch (e) {}
+      }
+    };
+  }, [form?.chatWidget, form?.id]);
+
+  function handleOpenChat() {
+    const root = document.getElementById("retell-widget-root");
+    if (root) {
+      const buttonInShadow = root.shadowRoot ? root.shadowRoot.querySelector("button") : null;
+      const buttonInRoot = root.querySelector("button, [role='button'], div[tabindex='0']");
+      const targetBtn = buttonInShadow || buttonInRoot;
+      if (targetBtn) {
+        targetBtn.click();
+        return;
+      }
+    }
+    const genericBtn = document.querySelector("#retell-widget-root button, [class*='retell'] button");
+    if (genericBtn) {
+      genericBtn.click();
+    }
+  }
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -263,6 +323,40 @@ export default function MortgageForm({ form, onLock }) {
               <p className="text-sm text-[#c0392b]">
                 ✗ Something went wrong. Please try again.
               </p>
+            </div>
+          )}
+
+          {/* Direct Chat Option */}
+          {form.chatWidget && (
+            <div className="pt-2">
+              <div className="relative flex py-2 items-center">
+                <div className="flex-grow border-t border-gray-200"></div>
+                <span className="flex-shrink mx-3 text-[11px] uppercase tracking-wider text-gray-400 font-medium">
+                  Or chat live
+                </span>
+                <div className="flex-grow border-t border-gray-200"></div>
+              </div>
+              <button
+                type="button"
+                onClick={handleOpenChat}
+                className="w-full py-3.5 px-4 border border-[#c0392b]/30 bg-red-50/50 hover:bg-red-50 hover:border-[#c0392b] text-[#c0392b] font-medium rounded-lg text-sm transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs hover:shadow-sm"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                  />
+                </svg>
+                {form.chatWidget.title || "Chat with Vizz Heights"}
+              </button>
             </div>
           )}
         </form>

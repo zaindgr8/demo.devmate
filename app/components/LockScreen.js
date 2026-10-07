@@ -146,8 +146,15 @@ export default function LockScreen({ fixedForm, onUnlock }) {
                   <div className="min-w-0 pr-3">
                     {selectedForm ? (
                       <>
-                        <div className="text-xs font-semibold tracking-wide text-gray-900 truncate">
-                          {selectedForm.title}
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span className="text-xs font-semibold tracking-wide text-gray-900 truncate">
+                            {selectedForm.title}
+                          </span>
+                          {selectedForm.chatWidget && (
+                            <span className="text-[10px] font-medium bg-red-100 text-[#c0392b] px-1.5 py-0.5 rounded-full inline-flex items-center gap-1">
+                              💬 Chat
+                            </span>
+                          )}
                         </div>
                         <div className="text-[11px] text-gray-500 mt-0.5">
                           Username:{" "}
@@ -218,8 +225,15 @@ export default function LockScreen({ fixedForm, onUnlock }) {
                           }`}
                         >
                           <div className="min-w-0 pr-3">
-                            <div className="text-xs font-semibold tracking-wide text-gray-900">
-                              {f.title}
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              <span className="text-xs font-semibold tracking-wide text-gray-900">
+                                {f.title}
+                              </span>
+                              {f.chatWidget && (
+                                <span className="text-[10px] font-medium bg-red-100 text-[#c0392b] px-1.5 py-0.5 rounded-full inline-flex items-center gap-1">
+                                  💬 Chat
+                                </span>
+                              )}
                             </div>
                             <div
                               className={`text-[11px] mt-0.5 ${
