@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { authenticateForm, FORMS } from "@/lib/forms";
 
 export default function LockScreen({ fixedForm, onUnlock }) {
@@ -8,6 +8,24 @@ export default function LockScreen({ fixedForm, onUnlock }) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
   const [shake, setShake] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  const selectedForm = Object.values(FORMS).find(
+    (f) => (username || "").toLowerCase() === f.username.toLowerCase()
+  );
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -96,59 +114,140 @@ export default function LockScreen({ fixedForm, onUnlock }) {
           {/* Form Fields */}
           <div className="space-y-6">
             {!fixedForm && (
-              <div>
-                <div className="flex items-center justify-between mb-3">
+              <div className="relative" ref={dropdownRef}>
+                <div className="flex items-center justify-between mb-2">
                   <span className="text-xs font-semibold uppercase tracking-wider text-gray-600">
                     Available Forms ({Object.keys(FORMS).length})
                   </span>
-                  <span className="text-[11px] text-gray-400">Click to select</span>
+                  <button
+                    type="button"
+                    onClick={() => setDropdownOpen((prev) => !prev)}
+                    className="text-[11px] text-[#c0392b] hover:text-[#961918] font-medium transition-colors cursor-pointer"
+                  >
+                    {dropdownOpen ? "Hide options ▲" : "Reveal options ▼"}
+                  </button>
                 </div>
-                <div className="space-y-2">
-                  {Object.values(FORMS).map((f) => {
-                    const isSelected =
-                      (username || "").toLowerCase() === f.username.toLowerCase();
-                    return (
-                      <button
-                        key={f.id}
-                        type="button"
-                        onClick={() => {
-                          setUsername(f.username);
-                          setError(false);
-                        }}
-                        className={`w-full flex items-center justify-between p-3.5 rounded-lg border text-left transition-all cursor-pointer ${
-                          isSelected
-                            ? "border-[#c0392b] bg-red-50/70 text-gray-900 shadow-sm ring-1 ring-[#c0392b]/30"
-                            : "border-gray-200 bg-gray-50/70 hover:bg-red-50/30 hover:border-red-200 text-gray-900"
-                        }`}
-                      >
-                        <div className="min-w-0 pr-3">
-                          <div className="text-xs font-semibold tracking-wide text-gray-900">
-                            {f.title}
-                          </div>
-                          <div
-                            className={`text-[11px] mt-0.5 ${
-                              isSelected ? "text-[#c0392b]" : "text-gray-500"
-                            }`}
-                          >
-                            Username:{" "}
-                            <span className="font-mono font-medium">{f.username}</span>
-                          </div>
+
+                {/* Dropdown Trigger */}
+                <button
+                  type="button"
+                  id="form-dropdown-trigger"
+                  onClick={() => setDropdownOpen((prev) => !prev)}
+                  aria-expanded={dropdownOpen}
+                  aria-haspopup="listbox"
+                  className={`w-full flex items-center justify-between p-3.5 rounded-lg border text-left transition-all cursor-pointer ${
+                    dropdownOpen
+                      ? "border-[#c0392b] ring-2 ring-[#c0392b]/20 bg-white shadow-sm"
+                      : selectedForm
+                      ? "border-[#c0392b]/60 bg-red-50/40"
+                      : "border-gray-300 bg-gray-50/70 hover:bg-red-50/30 hover:border-red-200"
+                  }`}
+                >
+                  <div className="min-w-0 pr-3">
+                    {selectedForm ? (
+                      <>
+                        <div className="text-xs font-semibold tracking-wide text-gray-900 truncate">
+                          {selectedForm.title}
                         </div>
-                        <div className="shrink-0 flex items-center gap-2">
-                          <span
-                            className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${
-                              isSelected
-                                ? "bg-[#c0392b] text-white shadow-xs"
-                                : "bg-gray-200 text-gray-700"
-                            }`}
-                          >
-                            {isSelected ? "Active" : "Select"}
+                        <div className="text-[11px] text-gray-500 mt-0.5">
+                          Username:{" "}
+                          <span className="font-mono text-[#c0392b] font-medium">
+                            {selectedForm.username}
                           </span>
                         </div>
-                      </button>
-                    );
-                  })}
-                </div>
+                      </>
+                    ) : (
+                      <div>
+                        <div className="text-xs text-gray-600 font-medium">
+                          Select a form from dropdown
+                        </div>
+                        <div className="text-[11px] text-gray-400 mt-0.5">
+                          Click to reveal available options
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="shrink-0 flex items-center gap-2">
+                    {selectedForm && (
+                      <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#c0392b] text-white shadow-xs">
+                        Selected
+                      </span>
+                    )}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className={`h-4 w-4 text-gray-500 transition-transform duration-200 ${
+                        dropdownOpen ? "rotate-180 text-[#c0392b]" : ""
+                      }`}
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                </button>
+
+                {/* Dropdown Options List */}
+                {dropdownOpen && (
+                  <div
+                    role="listbox"
+                    className="mt-2 space-y-1.5 p-2 bg-white rounded-lg border border-gray-200 shadow-xl animate-in fade-in duration-150 z-20"
+                  >
+                    {Object.values(FORMS).map((f) => {
+                      const isSelected =
+                        (username || "").toLowerCase() === f.username.toLowerCase();
+                      return (
+                        <button
+                          key={f.id}
+                          type="button"
+                          role="option"
+                          aria-selected={isSelected}
+                          onClick={() => {
+                            setUsername(f.username);
+                            setError(false);
+                            setDropdownOpen(false);
+                          }}
+                          className={`w-full flex items-center justify-between p-3 rounded-md border text-left transition-all cursor-pointer ${
+                            isSelected
+                              ? "border-[#c0392b] bg-red-50/80 text-gray-900 shadow-xs"
+                              : "border-transparent bg-gray-50/60 hover:bg-red-50/40 hover:border-red-200 text-gray-900"
+                          }`}
+                        >
+                          <div className="min-w-0 pr-3">
+                            <div className="text-xs font-semibold tracking-wide text-gray-900">
+                              {f.title}
+                            </div>
+                            <div
+                              className={`text-[11px] mt-0.5 ${
+                                isSelected ? "text-[#c0392b]" : "text-gray-500"
+                              }`}
+                            >
+                              Username:{" "}
+                              <span className="font-mono font-medium">
+                                {f.username}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="shrink-0 flex items-center">
+                            <span
+                              className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${
+                                isSelected
+                                  ? "bg-[#c0392b] text-white shadow-xs"
+                                  : "bg-gray-200 text-gray-700"
+                              }`}
+                            >
+                              {isSelected ? "Active" : "Select"}
+                            </span>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             )}
 
